@@ -33,4 +33,4 @@ None
 
 ---
 **Happy Coding!**
-**Note : Most of the pipeline and content are made from public resource with help of AI, AI makes mistakes"**
+**Note : Most of the pipeline and content are made from public resource with help of AI, AI can makes mistakes"**
