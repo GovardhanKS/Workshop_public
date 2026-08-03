@@ -7,6 +7,7 @@ Welcome to the **Claude Workshop Public** repository. This repository hosts all 
 
 - **etl_pipeline** – Lightweight CSV‑to‑SQLite pipeline demo.
 - **git_MCP_server** – Minimal GitHub MCP server used for test connection scripts.
+- **rare-disease-dmd-rag** - A retrieval-augmented (RAG) pipeline for Duchenne muscular dystrophy (DMD) research.
 
 
 ## Getting Started
@@ -33,4 +34,4 @@ None
 
 ---
 **Happy Coding!**
-**Note : Most of the pipeline and content are made from public resource with help of AI, AI can make mistakes"**
+**Note : Most of the pipeline and content are made from public resources with help of AI, AI can make mistakes"**
