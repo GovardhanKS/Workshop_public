@@ -1,4 +1,4 @@
-# DMD Clinical Trial Intelligence
+# Rare Disease DMD RAG
 
 A retrieval-augmented (RAG) pipeline for Duchenne muscular dystrophy (DMD)
 research. Ask a question and get a cited answer, compare two trials or two
