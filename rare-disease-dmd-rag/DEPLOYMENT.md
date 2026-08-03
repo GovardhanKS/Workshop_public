@@ -147,8 +147,8 @@ container orchestrator:
    ```ini
    # /etc/systemd/system/dmd-rag-api.service
    [Service]
-   WorkingDirectory=/opt/dmd-clinical-trial-intelligence
-   ExecStart=/opt/dmd-clinical-trial-intelligence/.venv/bin/uvicorn api.main:app --host 0.0.0.0 --port 8000
+   WorkingDirectory=/opt/rare-disease-dmd-rag
+   ExecStart=/opt/rare-disease-dmd-rag/.venv/bin/uvicorn api.main:app --host 0.0.0.0 --port 8000
    Restart=always
    Environment=LLM_MODE=extractive
 
@@ -163,7 +163,7 @@ container orchestrator:
 4. Schedule ingestion refreshes with cron, e.g. weekly:
 
    ```cron
-   0 3 * * 1 cd /opt/dmd-clinical-trial-intelligence && .venv/bin/python -m ingestion.fetch_trials && .venv/bin/python -m ingestion.fetch_literature && .venv/bin/python -m rag.embed_store && systemctl restart dmd-rag-api dmd-rag-ui
+   0 3 * * 1 cd /opt/rare-disease-dmd-rag && .venv/bin/python -m ingestion.fetch_trials && .venv/bin/python -m ingestion.fetch_literature && .venv/bin/python -m rag.embed_store && systemctl restart dmd-rag-api dmd-rag-ui
    ```
 
    `fetch_regulatory.py` and the `regulatory_guidance_dmd.json` seed file
