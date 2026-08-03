@@ -1,0 +1,70 @@
+{
+  "source": "Manually curated -- standard DMD clinical trial endpoints/biomarkers, general knowledge",
+  "note": "SEED DATA -- needs periodic re-verification. These are the endpoints referenced throughout DMD trial design (see each item's primary_outcomes fields in data/raw/trials_dmd.json) and regulatory guidance (see data/raw/regulatory_guidance_dmd.json, especially FDA-DMD-2018 and FDA-EXPEDITED-2014). Definitions are general clinical-trial-methodology knowledge, not pulled from a live structured API -- recheck against a current source before treating as authoritative.",
+  "items": [
+    {
+      "id": "BIOMARKER-DYSTROPHIN",
+      "name": "Dystrophin protein expression",
+      "type": "Surrogate biomarker",
+      "measured_via": "Muscle biopsy (Western blot / immunohistochemistry)",
+      "description": "Quantifies dystrophin protein restored in muscle fibers after treatment. The accepted surrogate endpoint underlying accelerated approval of exon-skipping antisense oligonucleotides (eteplirsen, golodirsen, viltolarsen, casimersen) and micro-dystrophin gene therapy (delandistrogene moxeparvovec).",
+      "used_in": "Exon-skipping and gene-therapy trials"
+    },
+    {
+      "id": "BIOMARKER-CK",
+      "name": "Serum creatine kinase (CK)",
+      "type": "Blood biomarker",
+      "measured_via": "Blood draw",
+      "description": "Elevated CK reflects ongoing muscle membrane damage/leakage and is markedly elevated in DMD from birth, often used for early diagnosis and monitoring, though it correlates poorly with disease severity/progression stage.",
+      "used_in": "Diagnosis, natural-history monitoring; rarely a primary trial endpoint"
+    },
+    {
+      "id": "BIOMARKER-NSAA",
+      "name": "North Star Ambulatory Assessment (NSAA)",
+      "type": "Functional motor scale",
+      "measured_via": "17-item observational rating scale of ambulatory motor function",
+      "description": "The most widely used ambulatory-function outcome measure in DMD trials, scoring activities like standing, walking, and climbing stairs. Central to recent non-surrogate-endpoint approvals (e.g. givinostat/Duvyzat).",
+      "used_in": "Ambulatory DMD trials, primary/secondary endpoint"
+    },
+    {
+      "id": "BIOMARKER-6MWT",
+      "name": "6-Minute Walk Test (6MWT)",
+      "type": "Functional motor test",
+      "measured_via": "Distance walked in 6 minutes",
+      "description": "A standard ambulatory-function endpoint measuring walking distance/endurance; widely used as a primary or key secondary endpoint across DMD and other neuromuscular disease trials.",
+      "used_in": "Ambulatory DMD trials, primary/secondary endpoint"
+    },
+    {
+      "id": "BIOMARKER-FVC",
+      "name": "Forced Vital Capacity (FVC) / pulmonary function",
+      "type": "Respiratory function test",
+      "measured_via": "Spirometry",
+      "description": "Tracks respiratory muscle decline, which becomes the dominant clinical concern once ambulation is lost. Used as a primary or key secondary endpoint in later-stage/non-ambulatory DMD trials.",
+      "used_in": "Non-ambulatory DMD trials, primary/secondary endpoint"
+    },
+    {
+      "id": "BIOMARKER-MRI-FATFRACTION",
+      "name": "Muscle MRI fat fraction",
+      "type": "Imaging biomarker",
+      "measured_via": "Quantitative MRI (e.g. Dixon-technique fat fraction)",
+      "description": "Quantifies fatty/fibrotic replacement of muscle tissue, a sensitive marker of disease progression that can detect change before functional decline is apparent -- increasingly used as a supportive/exploratory endpoint.",
+      "used_in": "Natural-history and exploratory trial endpoints"
+    },
+    {
+      "id": "BIOMARKER-PUL",
+      "name": "Performance of Upper Limb (PUL)",
+      "type": "Functional motor scale",
+      "measured_via": "Observational rating scale of upper-limb function (shoulder/elbow/wrist-hand dimensions)",
+      "description": "The standard upper-limb function measure for DMD, particularly important once ambulatory measures (NSAA/6MWT) are no longer applicable in non-ambulatory patients.",
+      "used_in": "Non-ambulatory DMD trials, primary/secondary endpoint"
+    },
+    {
+      "id": "BIOMARKER-TIMEDFUNCTION",
+      "name": "Timed function tests (e.g. time to rise from floor, 4-stair climb)",
+      "type": "Functional motor test",
+      "measured_via": "Stopwatch-timed observed task",
+      "description": "A family of simple timed tasks (supine-to-stand, 4-stair climb, 10-meter walk/run) used as secondary endpoints and to track ambulatory decline; the Gowers' sign (using arms to push off the floor to stand) is a classic early DMD diagnostic observation from this same task family.",
+      "used_in": "Ambulatory DMD trials, secondary endpoint"
+    }
+  ]
+}

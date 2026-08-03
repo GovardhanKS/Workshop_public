@@ -1,0 +1,1 @@
+{"semantic": {"recall@1": 0.576, "recall@3": 0.951, "recall@5": 0.972, "MRR": 1.0}, "keyword": {"recall@1": 0.576, "recall@3": 0.979, "recall@5": 1.0, "MRR": 1.0}, "queries": 12, "records": 15}

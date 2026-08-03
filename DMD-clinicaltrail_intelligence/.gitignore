@@ -1,0 +1,17 @@
+# Secrets / local config
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Original branding assets (not for the public repo -- see README "Branding")
+logo/
+DMD_Platform_Demo.pptx
+
+# Data/index artifacts built at runtime (rebuild with `python -m rag.embed_store`)
+data/*.pkl
+data/*.index
+data/*.jsonl

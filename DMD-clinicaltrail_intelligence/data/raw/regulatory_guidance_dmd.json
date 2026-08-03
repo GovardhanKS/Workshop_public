@@ -1,0 +1,86 @@
+{
+  "source": "FDA / EMA published guidance documents (manually curated, verified against FDA.gov, Federal Register notices, and the EMA/HMA ACT EU publication)",
+  "note": "SEED DATA -- needs periodic re-verification. This covers general clinical-trial-design guidance (eligibility, diversity, decentralized trials, RWE, rare disease, accelerated approval), which is distinct from data/raw/regulatory_dmd.json (drug-specific FDA approval/safety history). No free structured API publishes 'guidance document' metadata, so this list is hand-curated and dated as of 2026-07-22 -- recheck FDA.gov/EMA.europa.eu before relying on status fields, especially for items marked draft or unconfirmed.",
+  "items": [
+    {
+      "id": "FDA-DMD-2018",
+      "guidance": "Duchenne Muscular Dystrophy and Related Dystrophinopathies: Developing Drugs for Treatment",
+      "agency": "FDA",
+      "status": "Final",
+      "date": "2018-02",
+      "impact_area": "Study Design",
+      "description": "FDA's current thinking on clinical development programs and trial design for DMD, Becker MD, DMD-associated dilated cardiomyopathy, and symptomatic female carriers. Finalizes a June 2015 draft.",
+      "ai_insight": "This is the single most directly relevant document for this program -- it shapes endpoint selection and population definitions specifically for DMD trials, not just rare disease generally."
+    },
+    {
+      "id": "FDA-DIVERSITY-ELIGIBILITY-2020",
+      "guidance": "Enhancing the Diversity of Clinical Trial Populations -- Eligibility Criteria, Enrollment Practices, and Trial Designs",
+      "agency": "FDA",
+      "status": "Final",
+      "date": "2020-11",
+      "impact_area": "Recruitment",
+      "description": "Recommends broadening eligibility criteria and adjusting enrollment/trial-design strategies to increase representation of underrepresented groups. Finalizes a June 2019 draft.",
+      "ai_insight": "Broader eligibility criteria (e.g. relaxing age caps, comorbidity exclusions) directly improves enrollment feasibility in a small patient population like DMD."
+    },
+    {
+      "id": "FDA-DIVERSITY-ACTION-PLANS-2024",
+      "guidance": "Diversity Action Plans to Improve Enrollment of Participants From Underrepresented Populations in Clinical Studies",
+      "agency": "FDA",
+      "status": "Draft (status unresolved)",
+      "date": "2024-06",
+      "impact_area": "Recruitment",
+      "description": "Would require sponsors to submit a diversity action plan for enrollment in certain trials (mandated by FDORA). Briefly withdrawn from FDA's site around Jan 2025 following an executive order on DEI, then restored by court order around Feb 2025. A statutory deadline pointed to mid-2025 for finalization, but finalization could not be confirmed as of this write-up.",
+      "ai_insight": "Treat as directionally informative, not a binding requirement yet -- verify current status on FDA.gov before citing this as an active obligation."
+    },
+    {
+      "id": "FDA-DCT-2024",
+      "guidance": "Conducting Clinical Trials With Decentralized Elements -- Guidance for Industry, Investigators, and Other Interested Parties",
+      "agency": "FDA",
+      "status": "Final",
+      "date": "2024-09",
+      "impact_area": "Operations",
+      "description": "How to incorporate decentralized activities (local labs, telehealth visits, home-based procedures) into trial conduct. Finalizes a May 2023 draft.",
+      "ai_insight": "Enables remote/local visit models, which materially reduces travel burden for a low-mobility DMD patient population and their caregivers."
+    },
+    {
+      "id": "EMA-DCT-2022",
+      "guidance": "Recommendation Paper on Decentralised Elements in Clinical Trials",
+      "agency": "EMA (with the Heads of Medicines Agencies, ACT EU initiative)",
+      "status": "Published (non-binding recommendation, not a formal guideline)",
+      "date": "2022-12",
+      "impact_area": "Operations",
+      "description": "Covers sponsor/investigator oversight, e-consent, investigational medicinal product delivery, home-based procedures, and data management for decentralized elements in EU/EEA trials.",
+      "ai_insight": "Gives EU sponsors a harmonized basis for decentralized DMD trial operations across member states, mirroring the FDA's 2024 final guidance."
+    },
+    {
+      "id": "FDA-RWE-2023",
+      "guidance": "Considerations for the Use of Real-World Data and Real-World Evidence To Support Regulatory Decision-Making for Drug and Biological Products",
+      "agency": "FDA",
+      "status": "Final",
+      "date": "2023-08",
+      "impact_area": "Evidence Generation",
+      "description": "How sponsors can use real-world data (EHRs, claims, registries) to generate real-world evidence for regulatory submissions. Finalizes a December 2021 draft.",
+      "ai_insight": "Supports using DMD natural-history registries to contextualize or supplement trial evidence -- valuable given how few patients are eligible for randomization in this disease."
+    },
+    {
+      "id": "FDA-RARE-DISEASE-2023",
+      "guidance": "Rare Diseases: Considerations for the Development of Drugs and Biological Products",
+      "agency": "FDA",
+      "status": "Final",
+      "date": "2023-12",
+      "impact_area": "Study Design",
+      "description": "General issues in rare-disease drug development programs -- natural history data use, patient/caregiver input, flexible evidentiary approaches. Finalizes/renames the 2019 draft 'Rare Diseases: Common Issues in Drug Development'.",
+      "ai_insight": "Broadly informs rare-disease evidentiary strategy; read alongside the DMD-specific 2018 guidance rather than in place of it."
+    },
+    {
+      "id": "FDA-EXPEDITED-2014",
+      "guidance": "Expedited Programs for Serious Conditions -- Drugs and Biologics",
+      "agency": "FDA",
+      "status": "Final (a draft revision covering accelerated approval was circulating Dec 2024-Jan 2025, not yet finalized as far as could be verified)",
+      "date": "2014-05",
+      "impact_area": "Endpoints/Biomarkers",
+      "description": "Defines fast track, breakthrough therapy, accelerated approval (via surrogate/intermediate endpoints), and priority review.",
+      "ai_insight": "This is the framework under which dystrophin-restoration surrogate endpoints supported prior DMD exon-skipping drug accelerated approvals -- central to any biomarker-based endpoint strategy for this program."
+    }
+  ]
+}

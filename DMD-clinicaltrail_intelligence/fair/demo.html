@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DMD FAIR Data Discovery</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1a2233;background:#f6f8fb}
+.wrap{max-width:1080px;margin:0 auto;padding:18px}
+h1{font-size:20px;margin:0 0 2px}
+.sub{color:#5b6a82;font-size:12.5px;margin-bottom:14px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:12px;box-shadow:0 1px 2px rgba(20,40,80,.04)}
+#q{flex:1;min-width:220px;padding:9px 12px;border:1px solid #cdd7e6;border-radius:8px;font-size:14px}
+.seg{display:inline-flex;border:1px solid #cdd7e6;border-radius:8px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:8px 12px;cursor:pointer;font-size:12.5px;color:#3a475c}
+.seg button.on{background:#2b59c3;color:#fff}
+.tog{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#3a475c;cursor:pointer;user-select:none}
+.tog input{display:none}
+.tog .sw{width:34px;height:19px;border-radius:20px;background:#c8d2e0;position:relative;transition:.15s}
+.tog .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.15s}
+.tog input:checked + .sw{background:#2b59c3}
+.tog input:checked + .sw::after{left:17px}
+.chips{margin:10px 0 4px}
+.chips span{display:inline-block;background:#eaf0fb;color:#2b59c3;border:1px solid #d3e0f7;padding:3px 9px;border-radius:20px;font-size:12px;margin:0 6px 6px 0;cursor:pointer}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:14px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:13px 15px;margin-bottom:11px;box-shadow:0 1px 2px rgba(20,40,80,.04)}
+.rhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.src{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px;color:#fff}
+.src.ChEMBL{background:#7048c4}.src.PubMed{background:#c2683b}
+.src[data-s="ClinicalTrials.gov"]{background:#2f8f6b}.src.GEO{background:#31708e}
+.title{font-weight:650;font-size:14.5px;margin:5px 0 3px}
+.desc{color:#4a586e;font-size:12.8px}
+.ring{flex:0 0 auto;text-align:center;width:60px}
+.ring svg{display:block;margin:0 auto}
+.ring .lvl{font-size:10px;color:#5b6a82;margin-top:1px}
+.onto span{display:inline-block;background:#f0f3f8;border:1px solid #e0e6f0;color:#516079;padding:1px 7px;border-radius:5px;font-size:11px;margin:6px 5px 0 0}
+.links{margin-top:8px;font-size:12.5px}
+.links a{color:#2b59c3;text-decoration:none;margin-right:12px}
+.expand{margin-top:9px;border-top:1px dashed #e3e9f2;padding-top:9px;display:none}
+.grp{margin-bottom:7px}
+.grp h4{margin:0 0 3px;font-size:11.5px;color:#2b3a55;text-transform:uppercase;letter-spacing:.03em}
+.m{display:flex;gap:7px;align-items:baseline;font-size:12px;padding:1px 0}
+.dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;margin-top:4px}
+.dot.pass{background:#2f9e5f}.dot.partial{background:#e0a92e}.dot.fail{background:#d1495b}
+.mid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#7c8aa3;flex:0 0 96px}
+.mnote{color:#46566f}
+.small{font-size:11px;color:#8493ab}
+.side h3{font-size:13px;margin:2px 0 8px;color:#2b3a55}
+.ragbox{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:13px 15px;margin-bottom:14px;box-shadow:0 1px 2px rgba(20,40,80,.04)}
+.rag-ans{font-size:13px;color:#2b3a55;white-space:pre-wrap}
+.kg{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:10px;box-shadow:0 1px 2px rgba(20,40,80,.04)}
+.legend{font-size:11px;color:#5b6a82;margin-top:4px}
+.btn{border:1px solid #cdd7e6;background:#fff;border-radius:7px;padding:5px 10px;font-size:11.5px;cursor:pointer;color:#2b59c3;margin-top:8px}
+.muted{color:#8493ab;font-size:11.5px}
+.avgbar{display:flex;align-items:center;gap:8px;font-size:12px;margin:3px 0}
+.avgbar .n{flex:0 0 132px;color:#46566f}
+.avgbar .track{flex:1;background:#eef1f6;border-radius:5px;height:10px;overflow:hidden}
+.avgbar .fill{height:100%;background:#2b59c3}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DMD FAIR Data Catalog <span class="small">· demo</span></h1>
+  <div class="sub"><b>One searchable catalog of the scattered DMD data landscape — every record FAIR-scored, provenance-traced, and graph-linked.</b></div>
+  <div class="sub">15 records across GEO · ClinicalTrials.gov · ChEMBL · PubMed · scored with the FAIRsFAIR / F-UJI metric set (<b>provisional heuristic</b>, calibrated against F-UJI below) · KG backbone: Open Targets</div>
+
+  <div class="bar">
+    <input id="q" placeholder="Search DMD datasets… e.g. exon skipping gene therapy">
+    <div class="seg" id="mode">
+      <button data-m="semantic" class="on">Semantic</button>
+      <button data-m="keyword">Keyword</button>
+    </div>
+    <label class="tog"><input type="checkbox" id="rag"><span class="sw"></span>RAG answer</label>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="muted" style="margin:2px 0 10px 2px">Search quality (12-query gold set): <b>recall@5 0.97</b> semantic · <b>1.00</b> keyword · MRR 1.00 — measured by <code>evaluate_search.py</code></div>
+  <div class="bar" style="margin-bottom:2px">
+    <input id="rid" placeholder="Resolve an accession — try CHEMBL256997, NCT00264888, GSE1004, 10.3390/genes11080837, SRR123456">
+    <span class="muted" style="align-self:center">ID resolver</span>
+  </div>
+  <div id="rout"></div>
+
+  <div class="layout">
+    <div>
+      <div id="rag-panel" class="ragbox" style="display:none">
+        <h3 class="side" style="margin:0 0 6px">RAG answer <span class="muted">· generated over top-ranked records, FAIR scores supplied (not invented)</span></h3>
+        <div class="rag-ans" id="rag-ans">…</div>
+      </div>
+      <div id="results"></div>
+    </div>
+    <div class="side">
+      <div class="kg" style="margin-bottom:14px">
+        <h3>Knowledge graph <span class="muted">· click a node to re-center</span></h3>
+        <svg id="kg" viewBox="0 0 360 300" width="100%" height="300"></svg>
+        <div class="legend" id="kglegend"></div>
+      </div>
+      <div class="ragbox">
+        <h3 class="side">Mean FAIR by source</h3>
+        <div id="avg"></div>
+        <div class="muted" style="margin-top:8px">Metric set: FAIRsFAIR Data Object Assessment Metrics (F-UJI). Live authoritative scoring via f-uji.net for records with a resolvable PID.</div>
+      </div>
+      <div class="ragbox" style="margin-top:14px">
+        <h3 class="side">Methodology &amp; provenance</h3>
+        <div class="muted" style="line-height:1.6">
+          Scores implement the <b>FAIRsFAIR Data Object Assessment Metrics</b> (16 metric IDs, <code>FsF-F1-01D</code>&hellip;<code>FsF-R1.3-01M</code>) as used by <b>F-UJI</b>.
+          On-screen values are a <b>provisional heuristic</b> computed in code from each record metadata; the LLM/RAG layer only narrates them and cannot alter a score.
+          Records with a resolvable PID/DOI are assessed by the live F-UJI service (<code>pipeline --fuji</code>).<br><br>
+          <b>Data:</b> ChEMBL, ClinicalTrials.gov and PubMed records pulled live &amp; verified; GEO records are seeds pending E-utilities verification (flagged, scored lower).<br>
+          <b>Limitation:</b> F-UJI assesses <i>datasets</i> via a PID landing page &mdash; a clean fit for GEO; compounds/trials/papers are scored by the same metric logic at catalogue level.<br>
+          <b>Cite:</b> Devaraju &amp; Huber (2023), F-UJI, doi:10.5281/zenodo.6361400; metrics doi:10.5281/zenodo.6461229.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:4px">
+    <h3 class="side" style="margin-top:0">Scoring calibration — heuristic vs authoritative F-UJI</h3>
+    <div class="muted" style="margin-bottom:8px">&Delta; = heuristic &minus; F-UJI (target |&Delta;| &le; 10). The F-UJI column is populated by <code>calibrate.py --fuji</code> on a networked machine. F-UJI scores <i>dataset objects</i> (GEO accessions / DOIs); ChEMBL compounds &amp; trial registrations are catalogue-level heuristic only and marked N/A.</div>
+    <table id="calib" style="width:100%;border-collapse:collapse;font-size:12.5px"></table>
+    <div class="muted" style="margin-top:8px">F-UJI requires machine-actionable metadata (schema.org / DataCite, PID signposting), so it typically scores <b>lower</b> than an optimistic heuristic — a positive &Delta; is expected and drives the tightening loop.</div>
+  </div>
+  <div class="small" style="margin-top:16px">Sources: ChEMBL (EMBL-EBI), ClinicalTrials.gov (NIH/NLM), PubMed, GEO (NCBI). GEO records flagged <b>[SEED]</b> are pending live E-utilities verification and score lower by design.</div>
+</div>
+<script>
+const DATA = {
+  "meta": {
+    "domain": "Duchenne Muscular Dystrophy (DMD)",
+    "generated": "2026-07-23",
+    "sources": ["GEO", "ClinicalTrials.gov", "ChEMBL", "PubMed"],
+    "kg_backbone": "Open Targets (gene-disease-drug)",
+    "note": "ChEMBL / ClinicalTrials / PubMed records are pulled live and verified. GEO records are seeds pending live E-utilities fetch and are flagged verified=false."
+  },
+  "records": [
+    {"id":"CHEMBL256997","source":"ChEMBL","type":"compound","title":"Ataluren (Translarna, PTC124)","description":"Small-molecule inducer of ribosomal readthrough of nonsense (premature stop codon) mutations in the DMD gene, restoring dystrophin production. Approved (max_phase 4), first approval 2014, orphan drug, ATC M09AX03.","url":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL256997/","year":2014,"ontologies":["ChEMBL ID","ATC:M09AX03","InChIKey","EMA-EPAR"],"license":"CC BY-SA 3.0","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["DMD gene","dystrophin","nonsense mutation readthrough"]},
+    {"id":"CHEMBL2108278","source":"ChEMBL","type":"compound","title":"Eteplirsen (Exondys 51, AVI-4658)","description":"Antisense oligonucleotide (phosphorodiamidate morpholino) that induces exon 51 skipping in DMD pre-mRNA to restore the reading frame. First-in-class, approved 2016, ATC M09AX06.","url":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2108278/","year":2016,"ontologies":["ChEMBL ID","ATC:M09AX06","DailyMed"],"license":"CC BY-SA 3.0","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["DMD gene","dystrophin","exon 51 skipping","antisense oligonucleotide"]},
+    {"id":"CHEMBL1213492","source":"ChEMBL","type":"compound","title":"Givinostat (ITF2357)","description":"Orally available histone deacetylase (HDAC) inhibitor. First-in-class, approved 2024 for DMD, targeting inflammation and fibrosis downstream of dystrophin loss. ATC M09AX14.","url":"https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1213492/","year":2024,"ontologies":["ChEMBL ID","ATC:M09AX14","InChIKey","USAN"],"license":"CC BY-SA 3.0","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["HDAC inhibition","fibrosis","inflammation"]},
+    {"id":"NCT06817382","source":"ClinicalTrials.gov","type":"trial","title":"ASCEND: Phase 1 intrathecal INS1201 gene therapy in ambulatory DMD males","description":"Phase 1 multicenter open-label study of safety and biodistribution of a single intrathecal injection of INS1201 in ambulatory males with DMD. Sponsor: Insmed Gene Therapy. Recruiting. Enrollment 12; 10 sites.","url":"https://clinicaltrials.gov/study/NCT06817382","year":2025,"ontologies":["NCT ID","MeSH:Muscular Dystrophy, Duchenne"],"license":"Public domain (NLM)","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["INS1201","gene therapy","DMD gene"]},
+    {"id":"NCT00264888","source":"ClinicalTrials.gov","type":"trial","title":"Phase 2 of PTC124 (ataluren) for nonsense-mutation DMD","description":"Phase 2 study of PTC124 as an oral treatment for nonsense-mutation-mediated DMD. Sponsor: PTC Therapeutics. Completed. Enrollment 38; 3 sites. Started 2005.","url":"https://clinicaltrials.gov/study/NCT00264888","year":2005,"ontologies":["NCT ID","MeSH:Muscular Dystrophy, Duchenne"],"license":"Public domain (NLM)","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["ataluren","nonsense mutation readthrough","DMD gene"]},
+    {"id":"NCT02710591","source":"ClinicalTrials.gov","type":"trial","title":"Phase 1b multiple ascending oral doses of Rimeporide in DMD","description":"Phase 1b open-label study of safety, tolerability, PK/PD of multiple ascending oral doses of Rimeporide (NHE-1 inhibitor) in DMD. Sponsor: EspeRare Foundation. Completed. Enrollment 20; 4 sites.","url":"https://clinicaltrials.gov/study/NCT02710591","year":2016,"ontologies":["NCT ID","MeSH:Muscular Dystrophy, Duchenne"],"license":"Public domain (NLM)","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["Rimeporide","NHE-1 inhibitor","cardiac"]},
+    {"id":"NCT06564974","source":"ClinicalTrials.gov","type":"trial","title":"SUMMIT: long-term safety registry of Vamorolone (AGAMREE) in DMD","description":"Observational registry of long-term safety of vamorolone (AGAMREE), a dissociative steroid, in DMD. Sponsor: Catalyst Pharmaceuticals. Recruiting. Enrollment 250; 33 sites.","url":"https://clinicaltrials.gov/study/NCT06564974","year":2024,"ontologies":["NCT ID","MeSH:Muscular Dystrophy, Duchenne"],"license":"Public domain (NLM)","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["vamorolone","corticosteroid","safety registry"]},
+    {"id":"NCT04740554","source":"ClinicalTrials.gov","type":"trial","title":"Heart rate variability in DMD: corticosteroids and betablockers","description":"Observational characterization of heart rate variability in DMD under deflazacort, prednisone/prednisolone, or no corticosteroids vs typically developing controls. Sponsor: University of Sao Paulo. Completed. Enrollment 40.","url":"https://clinicaltrials.gov/study/NCT04740554","year":2013,"ontologies":["NCT ID","MeSH:Muscular Dystrophy, Duchenne"],"license":"Public domain (NLM)","persistent_id":true,"open_access":true,"structured":true,"verified":true,"entities":["deflazacort","prednisone","cardiac","corticosteroid"]},
+    {"id":"PMID32717791","source":"PubMed","type":"literature","title":"Therapeutic Strategies for Duchenne Muscular Dystrophy: An Update (2020)","description":"Review of DMD pathogenesis and therapy: mutational spectrum, diagnosis, clinical trials, dystrophin restoration, gene therapy, and myogenic cell transplantation. Genes (Basel).","url":"https://doi.org/10.3390/genes11080837","year":2020,"ontologies":["DOI","PMID","MeSH:Genetic Therapy"],"license":"CC BY (open access)","persistent_id":true,"open_access":true,"structured":false,"verified":true,"entities":["dystrophin restoration","gene therapy","cell transplantation","DMD gene"]},
+    {"id":"PMID35165856","source":"PubMed","type":"literature","title":"CRISPR-Cas9 Gene Therapy for Duchenne Muscular Dystrophy (2022)","description":"Review of CRISPR-Cas9 strategies (base/prime editing) to correct DMD mutations and restore dystrophin in vitro and in animal models; off-target editing, delivery, immune response. Neurotherapeutics.","url":"https://doi.org/10.1007/s13311-022-01197-9","year":2022,"ontologies":["DOI","PMID","MeSH:Gene Editing"],"license":"Subscription (abstract open)","persistent_id":true,"open_access":false,"structured":false,"verified":true,"entities":["CRISPR-Cas9","gene editing","dystrophin","DMD gene"]},
+    {"id":"PMID37673849","source":"PubMed","type":"literature","title":"Evolving Therapeutic Options for the Treatment of DMD (2023)","description":"Review of exon skipping antisense oligonucleotides, AAV gene replacement, CRISPR gene editing, and micro-dystrophin gene therapy (incl. Elevidys); lessons and challenges. Neurotherapeutics.","url":"https://doi.org/10.1007/s13311-023-01423-y","year":2023,"ontologies":["DOI","PMID","MeSH:Genetic Therapy"],"license":"Subscription (abstract open)","persistent_id":true,"open_access":false,"structured":false,"verified":true,"entities":["exon skipping","micro-dystrophin","AAV gene therapy","CRISPR"]},
+    {"id":"PMID38291016","source":"PubMed","type":"literature","title":"DMD: promising early-stage clinical trials to watch (2024)","description":"Overview of Phase I DMD trials from the last 5 years: exon-skipping AONs, gene transfer, inhibitors, small molecules, cell-based therapy, and repurposed drugs. Expert Opin Investig Drugs.","url":"https://doi.org/10.1080/13543784.2024.2313105","year":2024,"ontologies":["DOI","PMID","MeSH:Oligonucleotides, Antisense"],"license":"Subscription (abstract open)","persistent_id":true,"open_access":false,"structured":false,"verified":true,"entities":["antisense oligonucleotide","exon skipping","gene therapy","micro-dystrophin"]},
+    {"id":"PMID32985912","source":"PubMed","type":"literature","title":"Duchenne muscular dystrophy: an overview to the cardiologist (2020)","description":"Review of cardiac evaluation and management in DMD (echocardiography, MRI, dilated cardiomyopathy) as cardiac complications increasingly drive survival. Expert Rev Cardiovasc Ther.","url":"https://doi.org/10.1080/14779072.2020.1828065","year":2020,"ontologies":["DOI","PMID","MeSH:Cardiomyopathy, Dilated"],"license":"Subscription (abstract open)","persistent_id":true,"open_access":false,"structured":false,"verified":true,"entities":["cardiac","dilated cardiomyopathy","MRI"]},
+    {"id":"GSE1004","source":"GEO","type":"omics","title":"[SEED] Expression profiling of DMD vs normal skeletal muscle","description":"Transcriptomic microarray profiling comparing DMD patient skeletal muscle to normal controls. SEED RECORD - accession and metadata pending live verification via NCBI E-utilities; free-text sample annotation typical of GEO.","url":"https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE1004","year":2002,"ontologies":["GEO accession"],"license":"Open (NCBI)","persistent_id":true,"open_access":true,"structured":false,"verified":false,"entities":["transcriptomics","skeletal muscle","dystrophin","DMD gene"]},
+    {"id":"GSE-SEED-2","source":"GEO","type":"omics","title":"[SEED] RNA-seq of dystrophin-deficient muscle stem cells","description":"Placeholder seed for an RNA-seq dataset of dystrophin-deficient muscle stem cells. NOT YET VERIFIED - the live pipeline resolves and validates the true accession via NCBI E-utilities before this record is trusted. Included to show how unverified sources score lower on FAIR.","url":"https://www.ncbi.nlm.nih.gov/geo/","year":null,"ontologies":[],"license":"unknown","persistent_id":false,"open_access":true,"structured":false,"verified":false,"entities":["RNA-seq","muscle stem cells","dystrophin"]}
+  ]
+}
+;
+
+/* ---------- FAIRsFAIR / F-UJI aligned scorer (mirrors fair_fairsfair.py) ---------- */
+const METRICS = [
+ ["F","FsF-F1-01D","Globally unique & persistent identifier"],
+ ["F","FsF-F2-01M","Rich descriptive metadata"],
+ ["F","FsF-F3-01M","Metadata includes the data identifier"],
+ ["F","FsF-F4-01M","Offered via searchable/harvestable index"],
+ ["A","FsF-A1-01M","Standardised access protocol in metadata"],
+ ["A","FsF-A1-02M","Data content accessible via standard protocol"],
+ ["A","FsF-A2-01M","Metadata guaranteed to remain available"],
+ ["I","FsF-I1-01M","Machine-readable, structured metadata"],
+ ["I","FsF-I1-02M","Data content in a machine-readable format"],
+ ["I","FsF-I2-01M","FAIR-aligned controlled vocabularies"],
+ ["I","FsF-I3-01M","Qualified references to other entities"],
+ ["R","FsF-R1-01MD","Plurality of accurate attributes"],
+ ["R","FsF-R1.1-01M","Access/usage license specified"],
+ ["R","FsF-R1.1-02M","License is machine-readable (SPDX/URI)"],
+ ["R","FsF-R1.2-01M","Provenance / source information"],
+ ["R","FsF-R1.3-01M","Meets a community/domain standard"],
+];
+const SCHEMES=["ATC","MeSH","InChIKey","DOI","PMID","GEO","ChEMBL","NCT","EMA","USAN","DailyMed"];
+const nStd=r=>(r.ontologies||[]).filter(o=>SCHEMES.some(s=>o.includes(s))).length;
+function evalRec(r){
+ const ns=nStd(r), no=(r.ontologies||[]).length, dl=(r.description||"").length, ne=(r.entities||[]).length;
+ const P=(ok,partial,note)=>({status:ok?"pass":(partial?"partial":"fail"),note});
+ const m={
+  "FsF-F1-01D":P(r.persistent_id,false, r.persistent_id?"PID resolves":"no persistent identifier"),
+  "FsF-F2-01M":P(no>=2&&dl>60, no==1, no+" metadata vocab(s), description present"),
+  "FsF-F3-01M":P(r.persistent_id,false,"metadata carries the data identifier"),
+  "FsF-F4-01M":P(true,false,"indexed & harvestable in "+r.source),
+  "FsF-A1-01M":P(true,false,"HTTPS/REST access protocol in metadata"),
+  "FsF-A1-02M":P(r.open_access,!r.open_access, r.open_access?"open access":"full content behind subscription; metadata open"),
+  "FsF-A2-01M":P(r.verified,!r.verified, r.verified?"repository-backed persistence":"persistence unconfirmed (seed)"),
+  "FsF-I1-01M":P(r.structured,!r.structured, r.structured?"structured machine-readable record":"free-text / semi-structured"),
+  "FsF-I1-02M":(function(){var df=(r.type=="compound"||r.type=="omics");return P(df&&r.verified,(r.type=="trial")||(r.type=="omics"&&!r.verified), df?"machine-readable data files (structures/matrices)":(r.type=="trial"?"registry fields, no downloadable data object":"narrative text, not a structured data object"));})(),
+  "FsF-I2-01M":P(ns>=2, ns==1, ns+" FAIR-aligned vocabulary scheme(s)"),
+  "FsF-I3-01M":P(ne>=1,false, ne+" qualified entity link(s)"),
+  "FsF-R1-01MD":P(no>=2&&dl>80, no>=1, "multiple accurate attributes"),
+  "FsF-R1.1-01M":P(!!r.license&&r.license!="unknown",false,"license: "+r.license),
+  "FsF-R1.1-02M":(function(){var spdx=["CC BY-SA 3.0","CC BY","CC BY 4.0","CC0","CC BY (open access)"];var op=["Public domain (NLM)","Open (NCBI)"];return P(spdx.indexOf(r.license)>=0,op.indexOf(r.license)>=0, spdx.indexOf(r.license)>=0?"SPDX-identifiable license":(op.indexOf(r.license)>=0?"open but license not machine-readable":"no machine-readable license"));})(),
+  "FsF-R1.2-01M":P(r.verified,!r.verified, r.verified?("provenance: "+r.source):"provenance unverified"),
+  "FsF-R1.3-01M":P(r.structured&&ns>=1, ns>=1, "conforms to a community metadata standard"),
+ };
+ return m;
+}
+function score(r){
+ const m=evalRec(r), val={pass:1,partial:.5,fail:0}, g={F:[],A:[],I:[],R:[]};
+ METRICS.forEach(([grp,id])=>g[grp].push(val[m[id].status]));
+ const pct={}; for(const k in g) pct[k]=Math.round(100*g[k].reduce((a,b)=>a+b,0)/g[k].length);
+ const overall=Math.round((pct.F+pct.A+pct.I+pct.R)/4);
+ const level=overall>=75?"Advanced":overall>=50?"Moderate":overall>=25?"Basic":"Incomplete";
+ return {overall,level,principles:pct,metrics:m};
+}
+DATA.records.forEach(r=>r.fair=score(r));
+
+/* ---------- TF-IDF semantic search ---------- */
+const tok=s=>(s.toLowerCase().match(/[a-z0-9]+/g)||[]);
+const corpus=DATA.records.map(r=>tok([r.title,r.description,(r.entities||[]).join(" "),(r.ontologies||[]).join(" ")].join(" ")));
+const df={}; corpus.forEach(d=>{new Set(d).forEach(t=>df[t]=(df[t]||0)+1)});
+const N=corpus.length, idf=t=>Math.log((N+1)/((df[t]||0)+1))+1;
+function vec(tokens){const tf={};tokens.forEach(t=>tf[t]=(tf[t]||0)+1);const v={};for(const t in tf)v[t]=tf[t]*idf(t);return v}
+const docVecs=corpus.map(vec);
+function cos(a,b){let d=0,na=0,nb=0;for(const t in a){na+=a[t]*a[t];if(b[t])d+=a[t]*b[t]}for(const t in b)nb+=b[t]*b[t];return na&&nb?d/(Math.sqrt(na)*Math.sqrt(nb)):0}
+function rank(query,mode){
+ const qt=tok(query);
+ if(!qt.length) return DATA.records.map((r,i)=>({r,s:r.fair.overall/100}));
+ if(mode=="keyword"){
+   return DATA.records.map((r,i)=>{const set=new Set(corpus[i]);const s=qt.reduce((a,t)=>a+(set.has(t)?1:0),0)/qt.length;return{r,s}});
+ }
+ const qv=vec(qt);
+ return DATA.records.map((r,i)=>({r,s:cos(qv,docVecs[i])}));
+}
+
+/* ---------- render ---------- */
+let MODE="semantic";
+const el=id=>document.getElementById(id);
+function ringSVG(v){
+ const c=v>=75?"#2f9e5f":v>=50?"#2b59c3":v>=25?"#e0a92e":"#d1495b";
+ const r=20,circ=2*Math.PI*r,off=circ*(1-v/100);
+ return `<svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="${r}" fill="none" stroke="#eef1f6" stroke-width="6"/><circle cx="26" cy="26" r="${r}" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}" transform="rotate(-90 26 26)"/><text x="26" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#2b3a55">${v}</text></svg>`;
+}
+function metricRows(r){
+ let h="";
+ ["F","A","I","R"].forEach(g=>{
+  const names={F:"Findable",A:"Accessible",I:"Interoperable",R:"Reusable"};
+  h+=`<div class="grp"><h4>${names[g]} — ${r.fair.principles[g]}%</h4>`;
+  METRICS.filter(m=>m[0]==g).forEach(([,id,lbl])=>{
+   const s=r.fair.metrics[id];
+   h+=`<div class="m"><span class="dot ${s.status}"></span><span class="mid">${id}</span><span class="mnote"><b>${lbl}.</b> ${s.note}</span></div>`;
+  });
+  h+="</div>";
+ });
+ return h;
+}
+function renderResults(){
+ const q=el("q").value;
+ let rows=rank(q,MODE).sort((a,b)=>b.s-a.s||b.r.fair.overall-a.r.fair.overall);
+ if(tok(q).length) rows=rows.filter(x=>x.s>0);
+ const box=el("results"); box.innerHTML="";
+ if(!rows.length){box.innerHTML='<div class="card muted">No matches. Try “dystrophin”, “cardiac”, “CRISPR”, or “corticosteroid”.</div>';}
+ rows.forEach(({r,s})=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div class="rhead">
+     <div style="flex:1">
+       <span class="src ${r.source}" data-s="${r.source}">${r.source}</span>
+       <span class="small"> · ${r.type} · ${r.id}${tok(q).length?` · match ${(s*100).toFixed(0)}%`:""}</span>
+       <div class="title">${r.title}</div>
+       <div class="desc">${r.description}</div>
+       <div class="onto">${(r.ontologies||[]).map(o=>`<span>${o}</span>`).join("")}</div>
+       <div class="links"><a href="${r.url}" target="_blank" rel="noopener">Open source ↗</a>
+         <a href="https://www.f-uji.net/" target="_blank" rel="noopener" title="Paste this record PID/DOI to get the authoritative F-UJI assessment">Verify in F-UJI ↗</a>
+         <a href="#" class="exp">FAIR detail ▾</a></div>
+       <div class="expand">${metricRows(r)}</div>
+     </div>
+     <div class="ring">${ringSVG(r.fair.overall)}<div class="lvl">${r.fair.level}</div><div class="lvl" style="color:#a0aec0">provisional</div></div>
+   </div>`;
+  d.querySelector(".exp").onclick=e=>{e.preventDefault();const x=d.querySelector(".expand");x.style.display=x.style.display=="block"?"none":"block";};
+  box.appendChild(d);
+ });
+ if(el("rag").checked) runRAG(q,rows.slice(0,5).map(x=>x.r));
+}
+async function runRAG(q,top){
+ el("rag-panel").style.display="block";
+ const ans=el("rag-ans");
+ if(!q){ans.textContent="Type a question and results will be synthesised with citations.";return;}
+ ans.textContent="Thinking…";
+ const payload=top.map(r=>({id:r.id,source:r.source,title:r.title,text:r.description,fair:r.fair.overall,level:r.fair.level,url:r.url}));
+ const prompt=`You are a DMD data-discovery assistant. Answer the user question using ONLY the provided records. Cite each claim with the record id in brackets, e.g. [CHEMBL256997]. The FAIR score for each record is supplied — you may mention it but MUST NOT invent or recompute scores. Be concise (4-6 sentences). Question: "${q}"`;
+ try{
+   if(window.cowork&&window.cowork.askClaude){
+     const out=await window.cowork.askClaude(prompt,payload);
+     ans.textContent=typeof out==="string"?out:(out.text||JSON.stringify(out));
+   }else{
+     ans.textContent="RAG generation runs inside Cowork (window.cowork.askClaude). Top-ranked sources: "+payload.map(p=>p.id).join(", ")+".";
+   }
+ }catch(e){ans.textContent="RAG error: "+e.message;}
+}
+
+/* ---------- knowledge graph (ego, re-centerable) ---------- */
+const adj={}; // node -> Set of nodes
+function addEdge(a,b){(adj[a]=adj[a]||new Set()).add(b);(adj[b]=adj[b]||new Set()).add(a);}
+const nodeType={};
+DATA.records.forEach(r=>{
+ nodeType[r.id]="record";
+ (r.entities||[]).forEach(e=>{nodeType[e]="entity";addEdge(r.id,e);});
+});
+const DISEASE="Duchenne muscular dystrophy"; nodeType[DISEASE]="disease";
+DATA.records.forEach(r=>addEdge(DISEASE,r.id));
+let center=Object.keys(adj).filter(n=>nodeType[n]=="entity").sort((a,b)=>adj[b].size-adj[a].size)[0]||DISEASE;
+function drawKG(){
+ const svg=el("kg"); const W=360,H=300,cx=180,cy=150;
+ const nb=[...(adj[center]||[])].slice(0,10);
+ const col={disease:"#c0392b",record:"#2b59c3",entity:"#2f8f6b"};
+ let s="";
+ nb.forEach((n,i)=>{const ang=2*Math.PI*i/nb.length-Math.PI/2;const x=cx+110*Math.cos(ang),y=cy+110*Math.sin(ang);
+   s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#cdd7e6" stroke-width="1"/>`;});
+ nb.forEach((n,i)=>{const ang=2*Math.PI*i/nb.length-Math.PI/2;const x=cx+110*Math.cos(ang),y=cy+110*Math.sin(ang);
+   const lab=n.length>16?n.slice(0,15)+"…":n;
+   s+=`<g class="kn" data-n="${encodeURIComponent(n)}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="6" fill="${col[nodeType[n]]||"#888"}"/><text x="${x}" y="${y-9}" text-anchor="middle" font-size="9" fill="#3a475c">${lab}</text></g>`;});
+ const clab=center.length>20?center.slice(0,19)+"…":center;
+ s+=`<circle cx="${cx}" cy="${cy}" r="11" fill="${col[nodeType[center]]||"#333"}"/><text x="${cx}" y="${cy+24}" text-anchor="middle" font-size="11" font-weight="700" fill="#1a2233">${clab}</text>`;
+ svg.innerHTML=s;
+ svg.querySelectorAll(".kn").forEach(g=>g.onclick=()=>{center=decodeURIComponent(g.dataset.n);drawKG();});
+ el("kglegend").innerHTML=`Center: <b>${center}</b> (${nodeType[center]}) · ${nb.length} links · ● disease ● record ● entity`;
+}
+
+/* ---------- mean FAIR by source ---------- */
+function drawAvg(){
+ const by={}; DATA.records.forEach(r=>{(by[r.source]=by[r.source]||[]).push(r.fair.overall)});
+ el("avg").innerHTML=Object.entries(by).map(([k,v])=>{const m=Math.round(v.reduce((a,b)=>a+b,0)/v.length);
+   return `<div class="avgbar"><span class="n">${k}</span><span class="track"><span class="fill" style="width:${m}%"></span></span><b>${m}</b></div>`;}).join("");
+}
+
+/* ---------- wire up ---------- */
+["ripple"].forEach(()=>{});
+const EXAMPLES=["exon skipping gene therapy","nonsense mutation dystrophin","cardiac complications","CRISPR gene editing","corticosteroid safety","transcriptomics muscle"];
+el("chips").innerHTML=EXAMPLES.map(e=>`<span>${e}</span>`).join("");
+el("chips").querySelectorAll("span").forEach(c=>c.onclick=()=>{el("q").value=c.textContent;renderResults();});
+el("q").addEventListener("input",renderResults);
+el("mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{MODE=b.dataset.m;el("mode").querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");renderResults();});
+el("rag").addEventListener("change",()=>{el("rag-panel").style.display=el("rag").checked?"block":"none";renderResults();});
+function appliesFuji(r){if(r.source=="PubMed"&&r.url.indexOf("https://doi.org/")===0)return "yes";if(r.source=="GEO")return r.verified?"yes":"pending";return "N/A";}
+function drawCalib(){
+ const order={ChEMBL:0,"ClinicalTrials.gov":1,PubMed:2,GEO:3};
+ const rs=[...DATA.records].sort((a,b)=>(order[a.source]-order[b.source])||(b.fair.overall-a.fair.overall));
+ let h='<tr style="text-align:left;color:#5b6a82;border-bottom:1px solid #e3e9f2">'
+  +'<th style="padding:4px 6px">Record</th><th>Source</th><th style="text-align:right">Heuristic</th><th style="text-align:right">F-UJI</th><th style="text-align:right">&Delta;</th><th style="text-align:center">F-UJI?</th></tr>';
+ rs.forEach(r=>{const ap=appliesFuji(r);const c=ap=="yes"?"#2f9e5f":ap=="pending"?"#e0a92e":"#a0aec0";
+  h+=`<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:4px 6px;font-family:ui-monospace,Menlo,monospace">${r.id}</td><td>${r.source}</td><td style="text-align:right"><b>${r.fair.overall}</b></td><td style="text-align:right;color:#a0aec0">&mdash;</td><td style="text-align:right;color:#a0aec0">&mdash;</td><td style="text-align:center;color:${c}">${ap}</td></tr>`;});
+ document.getElementById("calib").innerHTML=h;
+}
+/* ---------- accession resolver (mirrors resolver.py) ---------- */
+const RPAT=[
+ [/^GSE\d+$/i,"GEO","NCBI E-utilities (db=gds)"],
+ [/^GDS\d+$/i,"GEO","NCBI E-utilities (db=gds)"],
+ [/^GSM\d+$/i,"GEO","NCBI E-utilities (sample)"],
+ [/^(SRR|SRX|SRP|SRS)\d+$/i,"SRA","NCBI E-utilities (db=sra)"],
+ [/^PRJNA\d+$/i,"BioProject","NCBI E-utilities (db=bioproject)"],
+ [/^NCT\d{8}$/i,"ClinicalTrials.gov","c-trials.get_trial_details"],
+ [/^CHEMBL\d+$/i,"ChEMBL","chembl.compound_search"],
+ [/^ENSG\d{11}$/i,"Open Targets","ot.query (target)"],
+ [/^EFO_\d+$/i,"Open Targets","ot.query (disease)"],
+ [/^(MONDO|ORPHA)[:_]\d+$/i,"Open Targets","ot.query (disease)"],
+ [/^PMID:?\s?\d+$/i,"PubMed","pubmed.get_article_metadata"],
+ [/^\d{6,9}$/,"PubMed","pubmed.get_article_metadata (PMID)"],
+];
+function rdetect(raw){const t=raw.trim();if(!t)return null;
+ if(/^10\.\d{4,9}\/\S+$/.test(t))return{id:t,src:"PubMed/CrossRef",route:"pubmed.lookup_by_id (DOI)"};
+ for(const [re,src,route] of RPAT){if(re.test(t))return{id:t.toUpperCase(),src,route};}
+ return{id:t,src:null};}
+function rresolve(raw){const d=rdetect(raw);if(!d)return null;if(!d.src)return{err:"unrecognized identifier",id:d.id};
+ const key=d.id.replace(/^PMID:?\s?/,"");
+ const hit=DATA.records.find(r=>r.id.toUpperCase()===d.id||r.id.toUpperCase()===("PMID"+key));
+ return Object.assign(d,{hit});}
+function drawResolve(){
+ const box=document.getElementById("rout");const v=document.getElementById("rid").value;
+ if(!v.trim()){box.innerHTML="";return;}
+ const r=rresolve(v);
+ if(r.err){box.innerHTML=`<div class="card muted">✗ ${r.err} — expected e.g. CHEMBL…, NCT########, GSE…, PMID, or a DOI.</div>`;return;}
+ if(r.hit){const h=r.hit;
+   box.innerHTML=`<div class="card"><div class="rhead"><div style="flex:1">
+     <span class="src ${h.source}" data-s="${h.source}">${h.source}</span>
+     <span class="small"> · routed via <code>${r.route}</code> · <b style="color:#2f9e5f">catalog hit</b></span>
+     <div class="title">${h.title}</div><div class="desc">${h.description}</div>
+     <div class="links"><a href="${h.url}" target="_blank" rel="noopener">Open source ↗</a></div></div>
+     <div class="ring">${ringSVG(h.fair.overall)}<div class="lvl">${h.fair.level}</div></div></div></div>`;
+ } else {
+   box.innerHTML=`<div class="card"><span class="src" style="background:#64748b">${r.src}</span>
+     <span class="small"> · <b>${r.id}</b></span>
+     <div class="desc" style="margin-top:6px">Not in the catalog yet. The resolver routes this to <b>${r.src}</b> and would fetch it live via <code>${r.route}</code>, then normalize &amp; FAIR-score it into the catalog.</div></div>`;
+ }
+}
+document.getElementById("rid").addEventListener("input",drawResolve);
+renderResults();drawKG();drawAvg();drawCalib();
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+record,source,type,heuristic_pct,fuji_pct,delta,fuji_applicable,note
+CHEMBL256997,ChEMBL,compound,100,—,—,N/A,not a F-UJI dataset object (compound/trial)
+CHEMBL2108278,ChEMBL,compound,100,—,—,N/A,not a F-UJI dataset object (compound/trial)
+CHEMBL1213492,ChEMBL,compound,100,—,—,N/A,not a F-UJI dataset object (compound/trial)
+NCT06817382,ClinicalTrials.gov,trial,94,—,—,N/A,not a F-UJI dataset object (compound/trial)
+NCT00264888,ClinicalTrials.gov,trial,94,—,—,N/A,not a F-UJI dataset object (compound/trial)
+NCT02710591,ClinicalTrials.gov,trial,94,—,—,N/A,not a F-UJI dataset object (compound/trial)
+NCT06564974,ClinicalTrials.gov,trial,94,—,—,N/A,not a F-UJI dataset object (compound/trial)
+NCT04740554,ClinicalTrials.gov,trial,94,—,—,N/A,not a F-UJI dataset object (compound/trial)
+PMID32717791,PubMed,literature,88,—,—,yes,resolvable dataset object
+PMID35165856,PubMed,literature,79,—,—,yes,resolvable dataset object
+PMID37673849,PubMed,literature,79,—,—,yes,resolvable dataset object
+PMID38291016,PubMed,literature,79,—,—,yes,resolvable dataset object
+PMID32985912,PubMed,literature,79,—,—,yes,resolvable dataset object
+GSE1004,GEO,omics,73,—,—,pending verify,seed accession not yet resolvable
+GSE-SEED-2,GEO,omics,42,—,—,pending verify,seed accession not yet resolvable

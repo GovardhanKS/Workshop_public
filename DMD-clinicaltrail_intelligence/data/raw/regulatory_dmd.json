@@ -1,0 +1,125 @@
+{
+  "source": "Mix of openFDA-verified label data (fetched live via ingestion/fetch_regulatory.py) and hand-curated general knowledge -- see each entry's `status` field.",
+  "status": "mixed -- see per-entry status",
+  "note": "Entries with status 'verified_via_openfda' had their indications_and_usage text pulled live from openFDA's /drug/label.json (confirms the drug/brand is on file with FDA and quotes its actual approved indication). Entries with status 'needs_verification' are drawn from the ingested literature corpus (see literature_dmd.json, PMID 40817386, 34120909, 36963652) plus general knowledge -- ataluren specifically has no openFDA record because it's EU-only (EMA conditional authorization, not FDA-approved).",
+  "approval_events": [
+    {
+      "drug": "eteplirsen",
+      "brand": "Exondys 51",
+      "sponsor": "Sarepta Therapeutics",
+      "pathway": "Accelerated approval",
+      "mechanism": "Exon 51 skipping antisense oligonucleotide",
+      "surrogate_endpoint": "Dystrophin production",
+      "supporting_source": "PMID 34120909 (PROMOVI trial)",
+      "status": "needs_verification",
+      "verify_against": "openFDA drug label + FDA approval letter"
+    },
+    {
+      "drug": "delandistrogene moxeparvovec",
+      "brand": "Elevidys",
+      "sponsor": "Sarepta Therapeutics",
+      "pathway": "Accelerated approval (2023), full approval (2024)",
+      "mechanism": "AAV micro-dystrophin gene transfer",
+      "surrogate_endpoint": "Micro-dystrophin expression",
+      "safety_signal": "Post-market reports of acute liver failure deaths in 2025 (per PMID 40817386); full approval reported despite not meeting phase 3 primary/secondary outcomes",
+      "supporting_source": "PMID 40817386",
+      "status": "needs_verification",
+      "verify_against": "openFDA drug label + FAERS adverse event reports + FDA safety communications"
+    },
+    {
+      "drug": "golodirsen",
+      "brand": "Vyondys 53",
+      "sponsor": "Sarepta Therapeutics",
+      "pathway": "Accelerated approval (2019)",
+      "mechanism": "Exon 53 skipping antisense oligonucleotide",
+      "surrogate_endpoint": "Dystrophin production",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "VYONDYS 53 is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients who have a confirmed mutation of the DMD gene that is amenable to exon 53 skipping. This indication is approved under accelerated approval based on an increase in dystrophin production in skeletal muscle observed in patients treated with VYONDYS 53.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "viltolarsen",
+      "brand": "Viltepso",
+      "sponsor": "NS Pharma (Nippon Shinyaku)",
+      "pathway": "Accelerated approval (2020)",
+      "mechanism": "Exon 53 skipping antisense oligonucleotide",
+      "surrogate_endpoint": "Dystrophin production",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "VILTEPSO is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients who have a confirmed mutation of the DMD gene that is amenable to exon 53 skipping. This indication is approved under accelerated approval based on an increase in dystrophin production in skeletal muscle observed in patients treated with VILTEPSO.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "casimersen",
+      "brand": "Amondys 45",
+      "sponsor": "Sarepta Therapeutics",
+      "pathway": "Accelerated approval (2021)",
+      "mechanism": "Exon 45 skipping antisense oligonucleotide",
+      "surrogate_endpoint": "Dystrophin production",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "AMONDYS 45 is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients who have a confirmed mutation of the DMD gene that is amenable to exon 45 skipping. This indication is approved under accelerated approval based on an increase in dystrophin production in skeletal muscle observed in patients treated with AMONDYS 45.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "givinostat",
+      "brand": "Duvyzat",
+      "sponsor": "Italfarmaco (ITF Pharma US)",
+      "pathway": "Standard approval (2024) -- not a surrogate-endpoint accelerated approval",
+      "mechanism": "Histone deacetylase (HDAC) inhibitor",
+      "surrogate_endpoint": "None -- approved on functional outcome (North Star Ambulatory Assessment), not a dystrophin-based surrogate",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "DUVYZAT is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 6 years of age and older. DUVYZAT is a histone deacetylase inhibitor indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 6 years of age and older.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "deflazacort",
+      "brand": "Emflaza",
+      "sponsor": "PTC Therapeutics",
+      "pathway": "Standard approval (2017) -- corticosteroid, not a surrogate-endpoint accelerated approval",
+      "mechanism": "Corticosteroid",
+      "surrogate_endpoint": "None -- approved on functional/strength outcomes",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "Deflazacort oral suspension is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 2 years of age and older. Deflazacort oral suspension is a corticosteroid indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 2 years of age and older.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "vamorolone",
+      "brand": "Agamree",
+      "sponsor": "Catalyst Pharmaceuticals (licensed from Santhera Pharmaceuticals)",
+      "pathway": "Standard approval (2023) -- dissociative corticosteroid analog, not a surrogate-endpoint accelerated approval",
+      "mechanism": "Dissociative corticosteroid (designed to reduce classic corticosteroid side effects)",
+      "surrogate_endpoint": "None -- approved on functional outcomes (e.g. time to stand)",
+      "status": "verified_via_openfda",
+      "openfda_indications_snippet": "AGAMREE is indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 2 years of age and older. AGAMREE is a corticosteroid indicated for the treatment of Duchenne muscular dystrophy (DMD) in patients 2 years of age and older.",
+      "verify_against": "openFDA drug label (fetched live)"
+    },
+    {
+      "drug": "ataluren",
+      "brand": "Translarna",
+      "sponsor": "PTC Therapeutics",
+      "pathway": "EMA conditional marketing authorization (EU, 2014) -- NOT FDA-approved (FDA has rejected it, most recently in 2024, citing insufficient evidence of efficacy)",
+      "mechanism": "Nonsense-mutation read-through agent",
+      "surrogate_endpoint": "None",
+      "status": "needs_verification",
+      "note": "No openFDA record exists for ataluren -- confirmed live (openFDA returns NOT_FOUND) -- because it is EU-authorized only, not FDA-approved. Verify against EMA's public assessment report instead of openFDA.",
+      "verify_against": "EMA public assessment report (Translarna)"
+    }
+  ],
+  "discontinued_programs": [
+    {
+      "drug": "PF-06939926",
+      "sponsor": "Pfizer",
+      "mechanism": "AAV micro-dystrophin gene transfer",
+      "reason": "Discontinued for efficacy and safety reasons, including participant deaths in trials",
+      "supporting_source": "PMID 40817386",
+      "status": "needs_verification"
+    },
+    {
+      "drug": "suvodirsen",
+      "sponsor": "Wave Life Sciences",
+      "mechanism": "Exon 51 skipping antisense oligonucleotide (stereopure PN chemistry)",
+      "reason": "Discontinued in October 2020 after Phase 2 interim results showed inadequate dystrophin production despite favorable exon-skipping/target engagement",
+      "status": "needs_verification",
+      "note": "General public knowledge, not sourced from this project's literature corpus -- verify against Wave Life Sciences' public disclosures before treating as ground truth."
+    }
+  ]
+}

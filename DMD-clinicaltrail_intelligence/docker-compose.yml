@@ -1,0 +1,40 @@
+services:
+  api:
+    build: .
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_MODE=${LLM_MODE:-extractive}
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-http://localhost:11434/v1}
+      - MODEL_NAME=${MODEL_NAME:-llama3.1}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-not-needed-for-local-ollama}
+      - EMBEDDING_BACKEND=${EMBEDDING_BACKEND:-tfidf}
+      - RERANK=${RERANK:-0}
+    volumes:
+      - ./data:/app/data
+
+  ui:
+    build: .
+    command: streamlit run ui/app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    environment:
+      - LLM_MODE=${LLM_MODE:-extractive}
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-http://localhost:11434/v1}
+      - MODEL_NAME=${MODEL_NAME:-llama3.1}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-not-needed-for-local-ollama}
+      - EMBEDDING_BACKEND=${EMBEDDING_BACKEND:-tfidf}
+      - RERANK=${RERANK:-0}
+    volumes:
+      - ./data:/app/data
+
+# Both services read ./.env automatically (docker/podman compose convention)
+# for the ${VAR} substitutions above -- that's where OPENAI_API_KEY etc.
+# should live; see .env (untracked, already .dockerignore'd -- never baked
+# into the image).
+#
+# MCP server (mcp_server/server.py) isn't wired in here: it's a stdio tool
+# meant to be spawned on demand by an MCP client, not a persistent networked
+# `up`/`down` service. Run it ad hoc instead:
+#   podman compose run --rm api sh -c "pip install -r requirements-mcp.txt && python -m mcp_server.server"

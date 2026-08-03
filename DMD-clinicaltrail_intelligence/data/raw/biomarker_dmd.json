@@ -1,0 +1,317 @@
+{
+  "source": [
+    "ChEMBL v34",
+    "Open Targets Platform"
+  ],
+  "fetched_via": "MCP chembl + ot connectors (live, open-access, no auth)",
+  "target": {
+    "target_chembl_id": "CHEMBL5498504",
+    "pref_name": "Dystrophin",
+    "target_type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens",
+    "gene_symbol": "DMD",
+    "uniprot_accession": "P11532",
+    "go_process_highlights": [
+      "skeletal muscle tissue development (GO:0007519)",
+      "regulation of skeletal muscle contraction (GO:0014819)",
+      "muscle organ development (GO:0007517)"
+    ],
+    "reactome_pathways": [
+      "Formation of the dystrophin-glycoprotein complex (DGC) - R-HSA-9913351",
+      "Striated Muscle Contraction - R-HSA-390522"
+    ]
+  },
+  "open_targets_entities": {
+    "Duchenne muscular dystrophy": [
+      {
+        "id": "MONDO_0010679",
+        "type": "disease"
+      },
+      {
+        "id": "MONDO_0016097",
+        "type": "disease"
+      },
+      {
+        "id": "MONDO_0020121",
+        "type": "disease"
+      }
+    ],
+    "dystrophin": [
+      {
+        "id": "ENSG00000198947",
+        "type": "target"
+      },
+      {
+        "id": "HP_0030096",
+        "type": "disease"
+      },
+      {
+        "id": "MONDO_0016147",
+        "type": "disease"
+      }
+    ]
+  },
+  "note": "Dystrophin is used as an FDA-accepted surrogate biomarker/endpoint for DMD accelerated-approval pathways (see regulatory_dmd.json and literature PMID 34120909, 40817386). associated_diseases below are Open Targets target-disease associations (score >= 0.2), fetched live via ingestion/fetch_biomarker.py.",
+  "associated_diseases": [
+    {
+      "id": "MONDO_0010679",
+      "name": "Duchenne muscular dystrophy",
+      "score": 0.8684
+    },
+    {
+      "id": "MONDO_0010311",
+      "name": "Becker muscular dystrophy",
+      "score": 0.8248
+    },
+    {
+      "id": "MONDO_0010542",
+      "name": "dilated cardiomyopathy 3B",
+      "score": 0.7911
+    },
+    {
+      "id": "MONDO_0020121",
+      "name": "muscular dystrophy",
+      "score": 0.6603
+    },
+    {
+      "id": "MONDO_0700335",
+      "name": "familial isolated dilated cardiomyopathy",
+      "score": 0.6278
+    },
+    {
+      "id": "MONDO_0016106",
+      "name": "progressive muscular dystrophy",
+      "score": 0.6182
+    },
+    {
+      "id": "MONDO_0016147",
+      "name": "neuromuscular disease caused by qualitative or quantitative defects of dystrophin",
+      "score": 0.5881
+    },
+    {
+      "id": "HP_0001626",
+      "name": "Abnormality of the cardiovascular system",
+      "score": 0.5526
+    },
+    {
+      "id": "MONDO_0004994",
+      "name": "cardiomyopathy",
+      "score": 0.5486
+    },
+    {
+      "id": "HP_0003236",
+      "name": "Elevated circulating creatine kinase concentration",
+      "score": 0.5455
+    },
+    {
+      "id": "HP_0003011",
+      "name": "Abnormality of the musculature",
+      "score": 0.5427
+    },
+    {
+      "id": "MONDO_0005336",
+      "name": "myopathy",
+      "score": 0.4879
+    },
+    {
+      "id": "EFO_0700060",
+      "name": "Duchenne and Becker muscular dystrophy",
+      "score": 0.4739
+    },
+    {
+      "id": "HP_0008981",
+      "name": "Calf muscle hypertrophy",
+      "score": 0.4628
+    },
+    {
+      "id": "MONDO_0005575",
+      "name": "colorectal cancer",
+      "score": 0.4571
+    },
+    {
+      "id": "HP_0001270",
+      "name": "Motor delay",
+      "score": 0.425
+    },
+    {
+      "id": "MONDO_0005021",
+      "name": "dilated cardiomyopathy",
+      "score": 0.4233
+    },
+    {
+      "id": "HP_0003458",
+      "name": "EMG: myopathic abnormalities",
+      "score": 0.4197
+    },
+    {
+      "id": "HP_0030234",
+      "name": "Highly elevated creatine kinase",
+      "score": 0.3973
+    },
+    {
+      "id": "EFO_1001488",
+      "name": "influenza A (H1N1)",
+      "score": 0.3878
+    },
+    {
+      "id": "MONDO_0016097",
+      "name": "symptomatic form of muscular dystrophy of Duchenne and Becker in female carriers",
+      "score": 0.3874
+    },
+    {
+      "id": "Orphanet_777",
+      "name": "X-linked non-syndromic intellectual disability",
+      "score": 0.3849
+    },
+    {
+      "id": "MONDO_0019181",
+      "name": "non-syndromic X-linked intellectual disability",
+      "score": 0.3701
+    },
+    {
+      "id": "HP_0003323",
+      "name": "Progressive muscle weakness",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0001324",
+      "name": "Muscle weakness",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0008942",
+      "name": "Acute rhabdomyolysis",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0008994",
+      "name": "Proximal lower limb muscle weakness",
+      "score": 0.34
+    },
+    {
+      "id": "Orphanet_73229",
+      "name": "Autosomal dominant familial hematuria - retinal arteriolar tortuosity - contractures",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0030096",
+      "name": "Abnormal muscle fiber dystrophin expression",
+      "score": 0.34
+    },
+    {
+      "id": "MONDO_0006664",
+      "name": "atrial septal defect",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0003457",
+      "name": "EMG abnormality",
+      "score": 0.34
+    },
+    {
+      "id": "HP_0003394",
+      "name": "Muscle spasm",
+      "score": 0.34
+    },
+    {
+      "id": "MONDO_0005148",
+      "name": "type 2 diabetes mellitus",
+      "score": 0.3148
+    },
+    {
+      "id": "MONDO_0100096",
+      "name": "COVID-19",
+      "score": 0.3034
+    },
+    {
+      "id": "MONDO_0001627",
+      "name": "dementia",
+      "score": 0.2952
+    },
+    {
+      "id": "MONDO_0000728",
+      "name": "ptosis",
+      "score": 0.267
+    },
+    {
+      "id": "HP_0000520",
+      "name": "Proptosis",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0008967",
+      "name": "Exercise-induced muscle stiffness",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0003738",
+      "name": "Exercise-induced myalgia",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0009020",
+      "name": "Exercise-induced muscle fatigue",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0000767",
+      "name": "Pectus excavatum",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0004322",
+      "name": "Short stature",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0009073",
+      "name": "Progressive proximal muscle weakness",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0009045",
+      "name": "Exercise-induced rhabdomyolysis",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0003710",
+      "name": "Exercise-induced muscle cramps",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0004325",
+      "name": "Decreased body weight",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0004209",
+      "name": "Clinodactyly of the 5th finger",
+      "score": 0.2661
+    },
+    {
+      "id": "HP_0003701",
+      "name": "Proximal muscle weakness",
+      "score": 0.2587
+    },
+    {
+      "id": "MONDO_0005015",
+      "name": "diabetes mellitus",
+      "score": 0.2513
+    },
+    {
+      "id": "MONDO_0002009",
+      "name": "major depressive disorder",
+      "score": 0.2365
+    },
+    {
+      "id": "MONDO_0011122",
+      "name": "obesity disorder",
+      "score": 0.2283
+    },
+    {
+      "id": "MONDO_0006007",
+      "name": "vesicoureteral reflux",
+      "score": 0.2194
+    }
+  ]
+}

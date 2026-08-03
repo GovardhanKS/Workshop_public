@@ -1,0 +1,6 @@
+# Optional production embedding/vector-store backend -- only needed if
+# you set EMBEDDING_BACKEND=hf. Pulls in torch (multi-GB); install
+# alongside requirements.txt, not instead of it:
+#   pip install -r requirements.txt -r requirements-hf.txt
+sentence-transformers>=2.6
+chromadb>=0.4
