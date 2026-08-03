@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This covers three ways to run DMD Clinical Trial Intelligence -- local (for
+This covers three ways to run rare-disease-dmd-rag -- local (for
 development), Podman/Docker (for a shareable, reproducible environment), and
 a lightweight always-on server setup -- plus the operational tasks around
 each (refreshing data, resource sizing, monitoring).
