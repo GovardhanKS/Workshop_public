@@ -52,7 +52,7 @@ class _ReportPDF(FPDF):
         self.set_y(-15)
         self.set_font("Helvetica", "I", 8)
         self.set_text_color(120, 120, 120)
-        self.cell(0, 10, f"DMD Clinical Trial Intelligence -- page {self.page_no()}", align="C")
+        self.cell(0, 10, f"Rare Disease DMD RAG -- page {self.page_no()}", align="C")
 
 
 def _new_pdf(title: str) -> _ReportPDF:

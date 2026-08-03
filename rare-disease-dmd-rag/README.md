@@ -86,6 +86,25 @@ No real logo ships with this project -- the UI and PDF exports fall back to
 a generic text badge. Drop your own `brand_logo.png` into `logo/`
 (gitignored) to brand your own deployment.
 
+## Future directions
+
+Open questions worth revisiting, not roadmap commitments:
+
+- **Does a rigid comparison table fit literature the way it fits trials?**
+  Trials have real structured fields (phase, enrollment, arms); two PubMed
+  abstracts mostly don't, so much of today's Compare Literature table is
+  either NER-tagged (solid) or an LLM guessing at free text (approximate,
+  and blank entirely offline). Might be worth a smaller table plus a
+  narrative comparison instead of matching the trials table row for row.
+- **NER currently tags one entity type (disease) in one place.** The same
+  PubTator3 call already returns chemical/drug and gene entities that
+  aren't used yet, and could replace the keyword-matched Biomarker/
+  Genotype field with an actual entity tag, plus extend the same tagging
+  to trial eligibility text.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md#future-directions) for the fuller
+writeup of both.
+
 ## Notes
 
 This pipeline evolves as we learn more about what works well for RAG over

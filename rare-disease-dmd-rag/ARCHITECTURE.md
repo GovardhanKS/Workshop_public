@@ -205,3 +205,62 @@ Dashboard tab, or `GET /dashboard`.
 | Start the MCP server | `python -m mcp_server.server` (needs `requirements-mcp.txt`) |
 | Refresh raw data | `python -m ingestion.fetch_<trials\|literature\|biomarker\|regulatory>` |
 | Run in Podman | See [DEPLOYMENT.md](DEPLOYMENT.md) |
+
+## Future directions
+
+Open questions, flagged here so they don't get lost -- not commitments.
+
+### Does the literature comparison table pull its weight?
+
+`agents/comparison.py:compare_literature()` builds the same shape of table
+as `compare_trials()`: one row per parameter, two value columns, an AI
+observation. That shape fits trials well because trials *have* those
+fields as structured metadata (phase, enrollment, arms, eligibility
+criteria). Two PubMed abstracts mostly don't -- of the rows in the table
+today, only PMID/journal/year (real metadata) and Disease Area (NER) are
+solid. Sample Size, Study Type, Primary Endpoint, and Key Finding are an
+LLM guessing at free text (needs `LLM_MODE=llm`, and even then it's an
+extraction, not a verified fact), and Biomarker/Genotype Mention is a
+keyword scan of the abstract. In offline mode, most of the table reads
+"Not available."
+
+Options worth weighing instead of one-table-fits-all:
+- A smaller, high-confidence table (PMID, journal, year, disease area) plus
+  a narrative comparison paragraph for the rest, rather than putting
+  low-confidence extractions in cells that imply the same certainty as a
+  trial's actual enrollment number.
+- Showing the abstract text itself side by side so a reader can judge the
+  free-text claims directly, instead of through an extraction layer.
+- Keeping the table, but visually distinguishing "structured fact" cells
+  from "AI-extracted" cells -- today that distinction is one caveat
+  sentence below the table, easy to miss.
+
+### NER covers one entity type in one place -- there's more available for free
+
+`ingestion/fetch_literature.py`'s PubTator3 call already returns Chemical,
+Gene, and Species entities alongside the Disease entities this project
+currently keeps (`rag/corpus.py`, `agents/comparison.py:_disease_area()`).
+None of the others are used yet:
+
+- **Chemical/drug entities** could replace `_extract_biomarker_mention()`'s
+  keyword scan (`"exon"`, `"dystrophin"`, `"mutation"`, ...) with actual
+  tagged drug names -- more precise, and reusable for a "which papers
+  mention drug X" filter.
+- **Gene entities** would tag DMD-gene/dystrophin mentions directly instead
+  of inferring them from keywords, and could extend to trial eligibility
+  criteria too (today NER only covers literature; trials still use the
+  keyword scan for Biomarker/Genotype Criteria).
+- **Entity normalization** -- PubTator3 already returns MeSH-normalized
+  IDs, which this project currently discards in favor of the raw entity
+  string. Keeping the ID would let two abstracts phrasing the same disease
+  concept differently be recognized as the same thing, and opens the door
+  to faceted filtering (browse by concept, not just full-text search).
+- **Coverage gap for very recent papers**: PubTator3 hasn't processed every
+  PMID yet (seen firsthand during this project's NER rollout -- two
+  brand-new PMIDs came back with zero entities). A periodic re-tagging
+  pass, or a local fallback tagger (e.g. scispaCy) for PMIDs PubTator3
+  hasn't reached yet, would close that gap without adding a live
+  dependency to normal operation.
+- **Relation extraction** (e.g. "drug X treats disease Y" as an extracted
+  claim, not just co-occurring entity tags) is a heavier lift needing its
+  own model -- the natural next step after entity tagging, not started.

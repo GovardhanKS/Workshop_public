@@ -32,7 +32,7 @@ from monitoring.feedback import compute_stats, log_feedback
 from rag.corpus import counts_by_source
 from rag.pipeline import TOP_K_DEFAULT, ask
 
-app = FastAPI(title="DMD Clinical Trial Intelligence API", version="0.3.0")
+app = FastAPI(title="Rare Disease DMD RAG API", version="0.3.0")
 
 _QUERY_COUNT = 0  # in-memory counter, resets on restart -- fine here, not a durable metric
 _DASHBOARD_PATH = pathlib.Path(__file__).parent.parent / "static" / "corpus_dashboard.html"

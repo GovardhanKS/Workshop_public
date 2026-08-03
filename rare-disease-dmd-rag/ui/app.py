@@ -24,7 +24,7 @@ from rag.pipeline import ask
 from reports import pdf as pdf_report
 from monitoring.feedback import log_feedback
 
-BRAND_NAME = "DMD Clinical Trial Intelligence"
+BRAND_NAME = "Rare Disease DMD RAG"
 BRAND_NAVY = "#0C447C"
 # Optional: point this at your own logo image to show it in the top bar
 # instead of the generic badge below.
