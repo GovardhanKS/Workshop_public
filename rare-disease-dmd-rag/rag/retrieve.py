@@ -1,11 +1,10 @@
 """Shared retrieval function the RAG pipeline (rag/pipeline.py) and the
 Comparison Agent call. Returns EvidencePackets -- structured, citation-tagged
-objects -- rather than free text, per the workflow doc's design principle:
-callers should never have to trust prose, only resolve source IDs.
+objects -- rather than free text, so callers never have to trust prose,
+only resolve source IDs.
 
-Dedup + optional rerank ported from fair-discovery's retriever/retriever.py
-(there: dedup per-accession across matched chunks; here: per-citation across
-this project's chunked Documents, see rag/chunk.py).
+Dedups (per-citation across this project's chunked Documents, see
+rag/chunk.py) and optionally reranks matches.
 """
 from __future__ import annotations
 

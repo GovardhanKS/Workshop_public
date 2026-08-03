@@ -1,9 +1,8 @@
-"""Comparison Agent -- builds the three structured tables the capstone
-brief calls for (literature comparison, trial comparison, regulatory
-insights) instead of free-text answers. Unlike the domain agents, this
-reads the corpus directly by ID (NCT/PMID) rather than through the
-retriever: a comparison needs one specific record's full text, not the
-single best-matching chunk of it.
+"""Comparison Agent -- builds structured tables (literature comparison,
+trial comparison, regulatory insights) instead of free-text answers. Unlike
+the domain agents, this reads the corpus directly by ID (NCT/PMID) rather
+than through the retriever: a comparison needs one specific record's full
+text, not the single best-matching chunk of it.
 """
 from __future__ import annotations
 

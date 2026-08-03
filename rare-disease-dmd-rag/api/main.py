@@ -5,15 +5,12 @@ Run: uvicorn api.main:app --reload --port 8000
 Endpoints:
   GET  /health              -- liveness check
   GET  /stats                -- corpus size + query counters for the exec dashboard
-  GET  /dashboard             -- static HTML snapshot of corpus counts/timeline/queries used
+  GET  /dashboard             -- static HTML snapshot of corpus counts
   POST /query                -- {"question": "...", "top_k": 10}  (top_k optional)
-  POST /generate-summary      -- alias of /query, matches the capstone brief's naming
+  POST /generate-summary      -- alias of /query
   POST /compare-trials        -- {"trialA": "NCT...", "trialB": "NCT..."}
   POST /compare-literature    -- {"pmidA": "...", "pmidB": "..."}
   POST /regulatory-insights   -- {} (no body needed) -> guidance table
-  GET  /fair/catalog          -- the 15-record DMD FAIR demo catalog, FAIR-scored
-  GET  /fair/resolve          -- ?accession=... -> detect ID type, route, FAIR-score if cached
-  GET  /related/{accession}  -- knowledge-graph neighbors of a fair/ catalog accession
   POST /feedback              -- {"question": "...", "rating": 1-5, "comment": "..."}
   GET  /monitoring/stats      -- query/feedback log stats
 
@@ -31,15 +28,13 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from agents import comparison
-from fair import service as fair_service
-from knowledge_graph.kg import get_graph, related_datasets as kg_related, related_for_citations
 from monitoring.feedback import compute_stats, log_feedback
 from rag.corpus import counts_by_source
 from rag.pipeline import TOP_K_DEFAULT, ask
 
 app = FastAPI(title="DMD Clinical Trial Intelligence API", version="0.3.0")
 
-_QUERY_COUNT = 0  # in-memory counter, resets on restart -- fine for a demo, not a durable metric
+_QUERY_COUNT = 0  # in-memory counter, resets on restart -- fine here, not a durable metric
 _DASHBOARD_PATH = pathlib.Path(__file__).parent.parent / "static" / "corpus_dashboard.html"
 
 
@@ -58,7 +53,6 @@ class QueryResponse(BaseModel):
     question: str
     summary: str
     citations: list[Citation]
-    related: dict[str, list[dict]]  # citation -> fair/ catalog neighbors, only for the (few) citations that overlap
     note: str | None = None
 
 
@@ -112,10 +106,8 @@ def stats():
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard():
-    """A self-hosted, shareable snapshot of the corpus-expansion numbers,
-    timeline, and queries used -- static HTML served from this app itself
-    (not a third-party link) so anyone with network access to this server
-    can open it directly."""
+    """A self-hosted, shareable snapshot of the corpus numbers -- static HTML
+    served from this app itself, not a third-party link."""
     if not _DASHBOARD_PATH.exists():
         raise HTTPException(404, "Dashboard not built -- see static/corpus_dashboard.html")
     return _DASHBOARD_PATH.read_text()
@@ -125,10 +117,9 @@ def _run_query(req: QueryRequest) -> QueryResponse:
     global _QUERY_COUNT
     _QUERY_COUNT += 1
     report = ask(req.question, top_k=req.top_k or TOP_K_DEFAULT)
-    related = related_for_citations([c["citation"] for c in report.citations])
     return QueryResponse(
         question=report.question, summary=report.summary,
-        citations=[Citation(**c) for c in report.citations], related=related, note=report.note,
+        citations=[Citation(**c) for c in report.citations], note=report.note,
     )
 
 
@@ -173,24 +164,6 @@ def compare_literature(req: CompareLiteratureRequest):
 @app.post("/regulatory-insights")
 def regulatory_insights():
     return comparison.load_regulatory_guidance()
-
-
-@app.get("/fair/catalog")
-def fair_catalog():
-    return fair_service.scored_catalog()
-
-
-@app.get("/fair/resolve")
-def fair_resolve(accession: str):
-    return fair_service.resolve_accession(accession)
-
-
-@app.get("/related/{accession}")
-def related(accession: str, k: int = 5):
-    """Knowledge-graph neighbors of a fair/ catalog accession (e.g.
-    CHEMBL256997, NCT00264888). Not meaningful for the wider 353-trial
-    corpus -- see knowledge_graph/kg.py for why."""
-    return kg_related(get_graph(), accession, k=k)
 
 
 @app.post("/feedback")

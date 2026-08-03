@@ -1,10 +1,5 @@
-"""Append-only query and feedback logs, plus simple aggregate stats -- the
-demo's minimal observability layer. Ported from fair-discovery's
-monitoring/feedback.py; that version threaded a pydantic Config object
-through for the log paths, which this project has no equivalent of, so the
-paths are plain module-level constants instead (same pattern as
-rag/embed_store.py's INDEX_PATH).
-"""
+"""Append-only query and feedback logs, plus simple aggregate stats -- a
+minimal observability layer."""
 from __future__ import annotations
 
 import json

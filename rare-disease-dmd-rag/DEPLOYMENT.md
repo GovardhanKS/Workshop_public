@@ -1,7 +1,7 @@
 # Deployment Guide
 
 This covers three ways to run DMD Clinical Trial Intelligence -- local (for
-development or a live demo), Podman (for a shareable, reproducible environment), and
+development), Podman/Docker (for a shareable, reproducible environment), and
 a lightweight always-on server setup -- plus the operational tasks around
 each (refreshing data, resource sizing, monitoring).
 
@@ -10,7 +10,7 @@ Nothing here requires rebuilding the search index per request. The index
 request just searches it -- see [ARCHITECTURE.md](ARCHITECTURE.md) for
 why that's safe even under repeated API calls.
 
-## 1. Local (development / live demo)
+## 1. Local (development)
 
 ```bash
 pip install -r requirements.txt
@@ -28,8 +28,8 @@ streamlit run ui/app.py
 - API: http://localhost:8000 (docs at http://localhost:8000/docs)
 - UI: http://localhost:8501
 
-This is what you want for the workshop/demo itself -- fastest iteration,
-easiest to debug.
+This is what you want while developing -- fastest iteration, easiest to
+debug.
 
 ## 2. Docker / Podman compose -- one command up, one command down
 
@@ -174,10 +174,10 @@ container orchestrator:
 
 This is intentionally light:
 
-- **TF-IDF backend (default)**: no GPU, no model download. The index for
-  ~700 chunks is a few MB on disk; fits comfortably in under 512 MB RAM
-  per process. A single small VM (1 vCPU, 1-2 GB RAM) runs API + UI fine
-  for demo/workshop traffic.
+- **TF-IDF backend (default)**: no GPU, no model download. The index is a
+  few tens of MB on disk regardless of corpus size; fits comfortably in
+  under 512 MB RAM per process. A single small VM (1 vCPU, 1-2 GB RAM)
+  runs API + UI fine for moderate traffic.
 - **HF/Chroma backend** (`EMBEDDING_BACKEND=hf`): downloads and loads
   `BAAI/bge-base-en-v1.5` (~400 MB) into memory per process -- budget at
   least 2 GB RAM if you switch to this, and expect a slower cold start

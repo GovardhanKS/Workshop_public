@@ -1,7 +1,7 @@
-"""Streamlit demo UI. Top bar with a brand badge, five agent status tiles,
-a query box with a per-agent evidence table, dedicated trial/literature
-comparison tables, a regulatory insights table, and an executive
-dashboard. Every table has a "Download as PDF" button (see reports/pdf.py).
+"""Streamlit UI. Top bar with a brand badge, source-count tiles, a query box
+with a per-source evidence table, dedicated trial/literature comparison
+tables, a regulatory insights table, and an executive dashboard. Every
+table has a "Download as PDF" button (see reports/pdf.py).
 
 Run: streamlit run ui/app.py
 """
@@ -22,8 +22,6 @@ from agents import comparison
 from rag.corpus import counts_by_source
 from rag.pipeline import ask
 from reports import pdf as pdf_report
-from fair import service as fair_service
-from knowledge_graph.kg import get_graph, related_datasets, related_for_citations
 from monitoring.feedback import log_feedback
 
 BRAND_NAME = "DMD Clinical Trial Intelligence"
@@ -82,9 +80,9 @@ for i, (name, count) in enumerate(_corpus_counts.items()):
             unsafe_allow_html=True,
         )
 
-tab_ask, tab_trials, tab_lit, tab_reg, tab_dash, tab_fair = st.tabs(
+tab_ask, tab_trials, tab_lit, tab_reg, tab_dash = st.tabs(
     ["Ask a Question", "Compare Trials", "Compare Literature", "Regulatory Insights",
-     "Executive Dashboard", "FAIR Catalog"]
+     "Executive Dashboard"]
 )
 
 # ---------------------------------------------------------------- Ask a Question
@@ -124,15 +122,6 @@ with tab_ask:
                     )
         else:
             st.caption("No matching evidence found.")
-
-        related = related_for_citations([c["citation"] for c in report.citations])
-        if related:
-            with st.expander("Related records (FAIR catalog knowledge graph)"):
-                for citation, neighbors in related.items():
-                    st.markdown(
-                        f"**{citation}** relates to: "
-                        + ", ".join(f"{n['id']} ({n['weight']:.1f})" for n in neighbors)
-                    )
 
         pdf_bytes = pdf_report.answer_pdf(report.question, report.summary, report.citations, report.note)
         st.download_button("📄 Download answer as PDF", pdf_bytes,
@@ -277,54 +266,3 @@ with tab_dash:
     )
     st.caption("See the Regulatory Insights tab for the full table with AI-generated impact notes, "
                "and Compare Trials/Compare Literature for the comparison tables.")
-
-# ---------------------------------------------------------------- FAIR Catalog
-with tab_fair:
-    st.caption(
-        "A separate 15-record DMD catalog (GEO/ChEMBL/ClinicalTrials/PubMed), scored against the "
-        "FAIRsFAIR Data Object Assessment Metrics as implemented by F-UJI. Scores are computed in "
-        "code (fair/fair_fairsfair.py) -- this tab only displays them. See fair/README.md."
-    )
-    catalog = fair_service.scored_catalog()
-    st.dataframe(
-        [{"ID": r["id"], "Source": r["source"], "Type": r["type"], "Title": r["title"][:70],
-          "FAIR %": r["fair"]["overall"], "Level": r["fair"]["level"]} for r in catalog],
-        width='stretch', hide_index=True,
-    )
-
-    st.markdown("**Metric drill-down**")
-    record_labels = {f"{r['id']} -- {r['title'][:60]}": r["id"] for r in catalog}
-    picked_label = st.selectbox("Record", options=list(record_labels.keys()), key="fair_record")
-    if picked_label:
-        picked = next(r for r in catalog if r["id"] == record_labels[picked_label])
-        f = picked["fair"]
-        p1, p2, p3, p4 = st.columns(4)
-        p1.metric("Findable", f"{f['principles']['F']}%")
-        p2.metric("Accessible", f"{f['principles']['A']}%")
-        p3.metric("Interoperable", f"{f['principles']['I']}%")
-        p4.metric("Reusable", f"{f['principles']['R']}%")
-        st.dataframe(
-            [{"Metric": mid, "Principle": m["principle"], "Status": m["status"],
-              "Label": m["label"], "Note": m["note"]} for mid, m in f["metrics"].items()],
-            width='stretch', hide_index=True,
-        )
-
-        neighbors = related_datasets(get_graph(), picked["id"], k=5)
-        st.markdown("**Related records (knowledge graph)**")
-        st.caption("Edges weighted by shared source, type, and entities (see knowledge_graph/kg.py).")
-        if neighbors:
-            st.dataframe(
-                [{"Related record": n["id"], "Title": n["title"][:60], "Shared weight": n["weight"]}
-                 for n in neighbors],
-                width='stretch', hide_index=True,
-            )
-        else:
-            st.caption("No related records above the weight threshold.")
-
-    st.markdown("**Accession resolver**")
-    st.caption("Paste an ID (GSE.../NCT.../CHEMBL.../PMID.../a DOI/ENSG.../EFO_...) to see how it "
-               "would be detected and routed to its source (+ FAIR score if it's already cached).")
-    accession = st.text_input("Accession", key="fair_accession", placeholder="CHEMBL256997")
-    if accession:
-        result = fair_service.resolve_accession(accession)
-        st.json(result)
